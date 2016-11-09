@@ -1,22 +1,5 @@
 #/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# def InorderTreeWalk(tree):
-# 	pass
-
-# def TreeSearch(tree, key):
-# 	pass
-
-# def InterativeTreeSearch(tree, key):
-# 	pass
-
-# def TreeMinimum(tree):
-# 	pass
-
-# def TreeMaximum(tree):
-# 	pass
-
-# def TreeSuccessor(tree):
-# 	pass
 import matplotlib.pyplot as plt
 # 二叉树节点类
 class TreeNode:
@@ -158,6 +141,7 @@ class BinarySearchTree:
 			self.transPlant(znodes, znodes.left)
 		
 
+# 测试代码
 bst = BinarySearchTree()
 nodes = [15,6,18,3,7,17,20,2,4,13,9]
 # 中序遍历将二叉搜索树中元素存入 nodes2 以便输出现实
@@ -176,19 +160,4 @@ bst.inorderTreeWalk()
 print("After delete :%d",len(nodes2))
 ax.plot(nodes2,'r-.',lw=5)
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
