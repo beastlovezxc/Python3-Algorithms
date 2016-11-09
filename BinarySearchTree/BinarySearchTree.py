@@ -1,13 +1,13 @@
-#/usr/bin/env python3
+#/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 # 二叉树节点类
 class TreeNode:
-	def __init__(self, key, left=None, right=None, parent=None):
-		self.key=key
-		self.left=left
-		self.right=right
-		self.parent=parent
+	def __init__(self, key, left = None, right = None, parent = None):
+		self.key = key
+		self.left = left
+		self.right = right
+		self.parent = parent
 
 	# 该节点是否有左孩子
 	def hasLeftChild(self):
@@ -19,24 +19,25 @@ class TreeNode:
 
 	# 该节点是否为左孩子 
 	def isLeftChild(self):
-		return self.parent and self.parent.left == self
+		return self.parent and self.parent.left is self
 
 	# 该节点是否为右孩子
 	def isRightChild(self):
-		return self.parent and self.parent.right == self
+		return self.parent and self.parent.right is self
 
 # 二叉搜索树类
 class BinarySearchTree:
 	# 二叉树初始化
-	def __init__(self, root=None):
-		self.root=root
-		self.size=0
+	def __init__(self, root = None):
+		self.root = root
+		self.size = 0
 
 	# 二叉搜索树插入
-	def insert(self, node):
-		node = TreeNode(node)
+	def insert(self, inode):
+		node = TreeNode(inode)
 		if not self.root:
 			self.root = node
+			self.size += 1
 		else:
 			currentNode = self.root
 			while True:
@@ -61,7 +62,7 @@ class BinarySearchTree:
 	def find(self, key):
 		if not self.root:
 			return None 
-		return self._find(key,self.root)
+		return self._find(key, self.root)
 	
 	def _find(self, key, node):
 		if not node:
@@ -105,6 +106,7 @@ class BinarySearchTree:
 			return
 		self._inorderTreeWalk(root.left)
 		# print(root.key)
+		# 存下节点，方便测试，可以去掉
 		nodes2.append(root.key)
 		self._inorderTreeWalk(root.right)
 
@@ -139,7 +141,7 @@ class BinarySearchTree:
 			self.transPlant(znodes, znodes.right)
 		else:
 			self.transPlant(znodes, znodes.left)
-		
+		self.size -= 1
 
 # 测试代码
 bst = BinarySearchTree()
@@ -153,11 +155,11 @@ for node in nodes:
 	bst.insert(node)
 bst.inorderTreeWalk()
 ax.plot(nodes2,'b-.',lw=5)
-print("Before delete :%d",len(nodes2))
+print("Before delete :%d"% bst.size)
 nodes2 = []
 bst.treeDelete(6)
 bst.inorderTreeWalk()
-print("After delete :%d",len(nodes2))
+print("After delete :%d"%bst.size)
 ax.plot(nodes2,'r-.',lw=5)
 plt.show()
 
