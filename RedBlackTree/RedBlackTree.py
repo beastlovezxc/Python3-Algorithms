@@ -35,7 +35,7 @@ class RedBlackTree:
                 currentNode = currentNode.left
         if not t_nil:
             self.root = node
-            node.parent = t
+            node.parent = self.nil
             node.color = BLACK
         elif node.key < t_nil.key:
             t_nil.left = node
@@ -44,15 +44,15 @@ class RedBlackTree:
             t_nil.right = node
             node.parent = t_nil
         node.color = RED
-        node.left = t
-        node.right = t
+        node.left = self.nil
+        node.right = self.nil
         # print(self.root.parent.color)
         # print(node.color)
         self.insertFixup(node)
 
         # self.insertFixup(node)
     def RBTransPlant(self, znode, ynode):
-        if self.parent.key is None:
+        if self.root.parent is self.nil:
             self.root = znode
         elif znode is znode.parent.left:
             znode.parent.left = ynode
@@ -95,33 +95,23 @@ class RedBlackTree:
                 return
         self.root.color = BLACK
         # print(self.root.color,self.root.key,self.root.parent.color)
-    def RBDelete(self, zkey): 
-        znode = self.find(zkey)
-        ynode = znode
-        ynodeOriginalColor = ynode.color
-        if znode.left is self.nil:
-            xnode = znode.right
-            self.RBTransPlant(znode, znode.right)
-        elif znode.right is self.nil:
-            xnode = znode.left
-            self.RBTransPlant(znode, znode.left)
-        else:
-            zTree = RedBlackTree(znode)
-            ynode = zTree.treeMinimum()
-            ynodeOriginalColor = ynode.color
-            xnode = ynode.right
-            if ynode.parent is znode:
-                xnode.parent = ynode
-            else:
-                self.RBTransPlant(ynode, ynode.right)
-                ynode.right = znode.right
-                ynode.right.parent = ynode
-            self.RBTransPlant(znode, ynode)
-            ynode.left = znode.left
-            ynode.left.parent = ynode
-            ynode.color = znode.color
-        if ynodeOriginalColor is BLACK:
-            RBDeleteFixup(xnode)
+    # def RBDelete(self, zkey): 
+    #     znode = self.find(zkey)
+    #     ynode = znode
+    #     ynodeOriginalColor = ynode.color
+    #     if znode.left and znode.right:
+    #         zTree = RedBlackTree(zkey)
+    #         ynode = zTree.treeMinimum()
+    #         ynodeOriginalColor = ynode.color
+    #         if ynode.parent != znode:
+    #             self.RBTransPlant(ynode, ynode.right)
+    #             ynode.right = znode.right
+    #             ynode.right.parent = ynode
+    #         self.RBTransPlant(znode,ynode)
+    #         ynode.left = znode.left
+    #         znode.left.parent = ynode
+    #     elif znode.left is self.nil:
+
 
     def RBDeleteFixup(self, node):
         while node != self.root and node.color is BLACK:
@@ -252,7 +242,7 @@ for node in nodes:
 # rbt.inorderRBTreeWalk()
 # for nodes in nodes2:
 # 	print(node)
-rbt.RBDelete(20)
+# rbt.RBDelete(20)
 rbt.preorderRBTreeWalk(rbt.root)
 x = rbt.root
 # print(x.key)
