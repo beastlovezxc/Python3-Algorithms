@@ -51,6 +51,14 @@ class RedBlackTree:
         self.insertFixup(node)
 
         # self.insertFixup(node)
+    def RBTransPlant(self, znode, ynode):
+        if self.parent.key is None:
+            self.root = znode
+        elif znode is znode.parent.left:
+            znode.parent.left = ynode
+        else:
+            znode.parent.right = ynode
+        ynode.parent = znode.parent
 
     def insertFixup(self, node):
         while node.parent.color is RED:
@@ -87,6 +95,86 @@ class RedBlackTree:
                 return
         self.root.color = BLACK
         # print(self.root.color,self.root.key,self.root.parent.color)
+    def RBDelete(self, zkey): 
+        znode = self.find(zkey)
+        ynode = znode
+        ynodeOriginalColor = ynode.color
+        if znode.left is self.nil:
+            xnode = znode.right
+            self.RBTransPlant(znode, znode.right)
+        elif znode.right is self.nil:
+            xnode = znode.left
+            self.RBTransPlant(znode, znode.left)
+        else:
+            zTree = RedBlackTree(znode)
+            ynode = zTree.treeMinimum()
+            ynodeOriginalColor = ynode.color
+            xnode = ynode.right
+            if ynode.parent is znode:
+                xnode.parent = ynode
+            else:
+                self.RBTransPlant(ynode, ynode.right)
+                ynode.right = znode.right
+                ynode.right.parent = ynode
+            self.RBTransPlant(znode, ynode)
+            ynode.left = znode.left
+            ynode.left.parent = ynode
+            ynode.color = znode.color
+        if ynodeOriginalColor is BLACK:
+            RBDeleteFixup(xnode)
+
+    def RBDeleteFixup(self, node):
+        while node != self.root and node.color is BLACK:
+            if node is node.parent.left:
+                w = node.parent.right
+                if w.color is RED:
+                    w.color = BLACK
+                    node.parent.color = RED
+                    self.leftRotate(node.parent)
+                    w = node.parent.right
+                if w.left.color is BLACK and w.right.color is BLACK:
+                    w.color = RED
+                    node = node.parent
+                elif w.right.color is BLACK:
+                    w.left.color = BLACK
+                    w.color = RED
+                    self.rightRotate(w)
+                    w = node.parent.right
+                w.color = node.parent.color
+                node.parent.color = BLACK
+                w.right.color = BLACK
+                self.leftRotate(node.parent)
+                node = self.root
+            else:
+                w = node.parent.left
+                if w.color is RED:
+                    w.color = BLACK
+                    node.parent.color = RED
+                    self.leftRotate(node.parent)
+                    w = node.parent.left
+                if w.right.color is BLACK and w.left.color is BLACK:
+                    w.color = RED
+                    node = node.parent
+                elif w.left.color is BLACK:
+                    w.right.color = BLACK
+                    w.color = RED
+                    self.leftRotate(w)
+                    w = node.parent.left
+                w.color = node.parent.color
+                node.parent.color = BLACK
+                w.left.color = BLACK
+                self.rightRotate(node.parent)
+                node = self.root
+        node.color = BLACK
+
+    def treeMinimum(self):
+        if self.root:
+            currentNode = self.root
+            while currentNode:
+                currentNode = currentNode.left
+            return currentNode
+        else:
+            return None
 
     def preorderRBTreeWalk(self, node):
         if node:
@@ -106,7 +194,7 @@ class RedBlackTree:
         self._inorderRBTreeWalk(root.left)
         nodes2.append(root.key)
         if root.key:
-        	print(root.key, root.color)
+            print(root.key, root.color)
         self._inorderRBTreeWalk(root.right)
 
     def leftRotate(self, x):
@@ -139,6 +227,21 @@ class RedBlackTree:
         y.right = x
         x.parent = y
 
+    def find(self, key):
+        if not self.root:
+            return None
+        return self._find(key, self.root)
+
+    def _find(self, key, node):
+        if not node:
+            return None
+        if node.key == key:
+            return node
+        if node.key > key:
+            return self._find(key, node.left)
+        else:
+            return self._find(key, node.right)
+
 # 测试代码
 # nodes = [15, 6]
 nodes = [15, 6, 18, 3, 7, 17, 20, 2, 4, 13, 9]
@@ -149,6 +252,7 @@ for node in nodes:
 # rbt.inorderRBTreeWalk()
 # for nodes in nodes2:
 # 	print(node)
+rbt.RBDelete(20)
 rbt.preorderRBTreeWalk(rbt.root)
 x = rbt.root
 # print(x.key)
